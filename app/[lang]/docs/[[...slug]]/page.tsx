@@ -1,24 +1,30 @@
 import { notFound } from 'next/navigation'
 import * as runtime from 'react/jsx-runtime'
-import { getDocBySlug, getAllDocs } from '@/lib/docs'
+import { getDocBySlug, getAllDocsByLocale } from '@/lib/docs'
+import { locales, type Locale } from '@/lib/nav'
 import { useMDXComponents } from '@/mdx-components'
 import type { Metadata } from 'next'
 
 export async function generateStaticParams() {
-  const docs = getAllDocs()
-  return docs.map((doc) => ({
-    slug: doc.slugPath === 'index' ? [] : doc.slugPath.split('/'),
-  }))
+  const params: { lang: string; slug?: string[] }[] = []
+  for (const lang of locales) {
+    const docs = getAllDocsByLocale(lang)
+    for (const doc of docs) {
+      params.push({
+        lang,
+        slug: doc.slugPath === 'index' ? undefined : doc.slugPath.split('/'),
+      })
+    }
+  }
+  return params
 }
 
-type PageProps = {
-  params: Promise<{ slug?: string[] }>
-}
-
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { slug } = await params
+export async function generateMetadata({
+  params,
+}: PageProps<'/[lang]/docs/[[...slug]]'>): Promise<Metadata> {
+  const { lang, slug } = await params
   const slugPath = slug?.join('/') || 'index'
-  const doc = getDocBySlug(slugPath)
+  const doc = getDocBySlug(lang, slugPath)
   if (!doc) return {}
   return {
     title: doc.title,
@@ -33,10 +39,12 @@ function MDXContent({ code }: { code: string }) {
   return <Component components={components} />
 }
 
-export default async function DocPage({ params }: PageProps) {
-  const { slug } = await params
+export default async function DocPage({
+  params,
+}: PageProps<'/[lang]/docs/[[...slug]]'>) {
+  const { lang, slug } = await params
   const slugPath = slug?.join('/') || 'index'
-  const doc = getDocBySlug(slugPath)
+  const doc = getDocBySlug(lang, slugPath)
 
   if (!doc) notFound()
 

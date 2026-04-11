@@ -12,10 +12,12 @@ export default defineConfig({
         description: s.string().optional(),
         order: s.number().optional(),
         content: s.mdx(),
-      }).transform(data => ({
-        ...data,
-        slugPath: data.slug.replace(/^docs\/?/, '').replace(/\/index$/, '') || 'index',
-      }))
+      }).transform(data => {
+        const parts = data.slug.replace(/^docs\//, '').split('/')
+        const locale = parts[0]
+        const slugPath = parts.slice(1).join('/').replace(/\/index$/, '') || 'index'
+        return { ...data, locale, slugPath }
+      })
     }
   }
 })

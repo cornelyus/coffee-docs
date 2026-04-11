@@ -2,7 +2,8 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { nav, type NavItem } from '@/lib/nav'
+import { getNav, type NavItem, type Locale } from '@/lib/nav'
+import LocaleSwitcher from './locale-switcher'
 
 function NavLink({ item, depth = 0 }: { item: NavItem; depth?: number }) {
   const pathname = usePathname()
@@ -33,7 +34,8 @@ function NavLink({ item, depth = 0 }: { item: NavItem; depth?: number }) {
   )
 }
 
-export function Sidebar() {
+export function Sidebar({ lang }: { lang: string }) {
+  const navItems = getNav(lang as Locale)
   return (
     <nav className="w-64 shrink-0 py-8 pr-8">
       <div className="mb-4 flex items-center gap-2 px-3">
@@ -41,10 +43,13 @@ export function Sidebar() {
         <span className="font-semibold text-gray-900 dark:text-gray-100">Specialty Coffee</span>
       </div>
       <ul className="space-y-0.5">
-        {nav.map((item) => (
+        {navItems.map((item) => (
           <NavLink key={item.href} item={item} />
         ))}
       </ul>
+      <div className="mt-6 px-3">
+        <LocaleSwitcher currentLang={lang} />
+      </div>
     </nav>
   )
 }
