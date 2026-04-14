@@ -81,7 +81,7 @@ export function SearchDialog({ locale, onClose }: SearchDialogProps) {
             type="text"
             value={query}
             onChange={handleChange}
-            placeholder="Search docs..."
+            placeholder="Ask anything about coffee..."
             className="flex-1 bg-transparent text-sm text-gray-900 dark:text-gray-100 placeholder-gray-400 outline-none"
           />
           {loading && (
@@ -100,9 +100,22 @@ export function SearchDialog({ locale, onClose }: SearchDialogProps) {
             <p className="px-3 py-4 text-center text-sm text-gray-400">No results found</p>
           )}
           {!error && !query.trim() && (
-            <p className="px-3 py-4 text-center text-sm text-gray-400">
-              Type to search across all docs
-            </p>
+            <div className="px-3 py-4">
+              <p className="text-xs text-gray-400 mb-3">
+                Semantic search — find docs by meaning, not just keywords
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {['where does coffee come from', 'why does grind size matter', 'fruity flavor notes'].map((example) => (
+                  <button
+                    key={example}
+                    onClick={() => { setQuery(example); search(example) }}
+                    className="rounded-full border border-gray-200 dark:border-gray-700 px-3 py-1 text-xs text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                  >
+                    {example}
+                  </button>
+                ))}
+              </div>
+            </div>
           )}
           {results.map((r) => (
             <Link
