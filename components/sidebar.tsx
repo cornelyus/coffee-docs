@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { getNav, type NavItem, type Locale } from '@/lib/nav'
 import LocaleSwitcher from './locale-switcher'
+import { SearchButton } from './search-button'
 
 function NavLink({ item, depth = 0 }: { item: NavItem; depth?: number }) {
   const pathname = usePathname()
@@ -41,6 +42,9 @@ export function Sidebar({ lang }: { lang: string }) {
       <div className="mb-4 flex items-center gap-2 px-3">
         <span className="text-xl">☕</span>
         <span className="font-semibold text-gray-900 dark:text-gray-100">Specialty Coffee</span>
+      </div>
+      <div className="mb-3 px-0">
+        <SearchButton locale={lang} />
       </div>
       <ul className="space-y-0.5">
         {navItems.map((item) => (
