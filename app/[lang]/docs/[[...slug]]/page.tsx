@@ -3,6 +3,7 @@ import * as runtime from 'react/jsx-runtime'
 import { getDocBySlug, getAllDocsByLocale } from '@/lib/docs'
 import { locales, type Locale } from '@/lib/nav'
 import { useMDXComponents } from '@/mdx-components'
+import { SITE_URL } from '@/lib/site-url'
 import type { Metadata } from 'next'
 
 export async function generateStaticParams() {
@@ -26,9 +27,30 @@ export async function generateMetadata({
   const slugPath = slug?.join('/') || 'index'
   const doc = getDocBySlug(lang, slugPath)
   if (!doc) return {}
+
+  const suffix = slugPath === 'index' ? '' : `/${slugPath}`
+  const canonical = `${SITE_URL}/${lang}/docs${suffix}`
+  const altLangs = Object.fromEntries(
+    locales.map(l => [l, `${SITE_URL}/${l}/docs${suffix}`])
+  )
+
   return {
     title: doc.title,
     description: doc.description,
+    alternates: {
+      canonical,
+      languages: altLangs,
+    },
+    openGraph: {
+      title: doc.title,
+      description: doc.description,
+      url: canonical,
+      type: 'article',
+    },
+    twitter: {
+      title: doc.title,
+      description: doc.description,
+    },
   }
 }
 

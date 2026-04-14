@@ -3,16 +3,27 @@ import { Inter } from 'next/font/google'
 import Script from 'next/script'
 import { GoatCounter } from '@/components/goatcounter'
 import { Analytics } from "@vercel/analytics/next"
+import { SITE_URL } from '@/lib/site-url'
 import './globals.css'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
     default: 'Specialty Coffee Docs',
     template: '%s | Specialty Coffee Docs',
   },
   description: 'A comprehensive guide to specialty coffee — brewing, processing, water chemistry, and more.',
+  openGraph: {
+    type: 'website',
+    siteName: 'Specialty Coffee Docs',
+    images: [{ url: '/opengraph-image.png', width: 1200, height: 630 }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    images: ['/opengraph-image.png'],
+  },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
