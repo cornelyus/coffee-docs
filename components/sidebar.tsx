@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { getNav, type NavItem, type Locale } from '@/lib/nav'
+import { type NavItem } from '@/lib/nav'
 import LocaleSwitcher from './locale-switcher'
 import { SearchButton } from './search-button'
 
@@ -35,8 +35,7 @@ function NavLink({ item, depth = 0 }: { item: NavItem; depth?: number }) {
   )
 }
 
-export function Sidebar({ lang }: { lang: string }) {
-  const navItems = getNav(lang as Locale)
+export function Sidebar({ lang, navItems }: { lang: string; navItems: NavItem[] }) {
   return (
     <nav className="w-64 shrink-0 py-8 pr-8">
       <div className="mb-4 flex items-center gap-2 px-3">

@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { getNav, type NavItem, type Locale } from '@/lib/nav'
+import { type NavItem } from '@/lib/nav'
 import { SearchButton } from './search-button'
 import LocaleSwitcher from './locale-switcher'
 
@@ -68,10 +68,9 @@ export function MobileTopBar({ lang }: { lang: string }) {
   )
 }
 
-export function MobileNavTrigger({ lang }: { lang: string }) {
+export function MobileNavTrigger({ lang, navItems }: { lang: string; navItems: NavItem[] }) {
   const [isOpen, setIsOpen] = useState(false)
   const pathname = usePathname()
-  const navItems = getNav(lang as Locale)
   const sectionTitle = findSectionTitle(navItems, pathname)
 
   useEffect(() => {
